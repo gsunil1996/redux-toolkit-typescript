@@ -14,6 +14,11 @@ export const store = configureStore({
     pets: petsApiReducer,
     crud: crudReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+  devTools: true,
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
