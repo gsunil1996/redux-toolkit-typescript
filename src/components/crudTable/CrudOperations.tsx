@@ -489,11 +489,12 @@ const CrudOperations = () => {
       />
 
       {/* edit employee dialog */}
-      <EditEmployee
+      {tableRowId && <EditEmployee
         editEmployeeopen={editEmployeeopen}
         setEditEmployeeOpen={setEditEmployeeOpen}
         tableRowId={tableRowId}
-      />
+      />}
+
 
 
       {/* delete employee dialog */}

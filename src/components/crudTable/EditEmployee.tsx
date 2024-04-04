@@ -34,7 +34,7 @@ const EditEmployee = (props: EditEmployeeComponentProps) => {
   const { editEmployeeopen, setEditEmployeeOpen, tableRowId } = props;
   const dispatch = useAppDispatch()
 
-  const { employeeEditDataLoading: isLoading, employeeProfileData, employeeProfileIsLoading, employeeProfileIsError, employeeProfileIsSuccess, employeeProfileError } = useAppSelector((state) => state.crud)
+  const { employeeEditDataLoading, employeeEditDataIsError, employeeEditDataError, employeeEditDataIsSuccess, employeeProfileData, employeeProfileIsLoading, employeeProfileIsError, employeeProfileIsSuccess, employeeProfileError } = useAppSelector((state) => state.crud)
 
   const [inputdata, setInputData] = useState({
     fname: "",
@@ -76,20 +76,25 @@ const EditEmployee = (props: EditEmployeeComponentProps) => {
 
     // console.log("inputData", inputdata)
 
-    const employeeData = {
-      search: sessionStorage.getItem("search") || "",
-      gender: sessionStorage.getItem("gender") || "all",
-      status: sessionStorage.getItem("status") || "all",
-      sort: sessionStorage.getItem("sort") || "new",
-      page: Number(sessionStorage.getItem("page")) || 1,
-    };
-
     const payload = {
       data: inputdata,
       tableRowId,
     };
 
-    dispatch(editEmployeeTableData(payload)).then(() => {
+    dispatch(editEmployeeTableData(payload))
+  };
+
+  useEffect(() => {
+    if (employeeEditDataIsSuccess) {
+
+      const employeeData = {
+        search: sessionStorage.getItem("search") || "",
+        gender: sessionStorage.getItem("gender") || "all",
+        status: sessionStorage.getItem("status") || "all",
+        sort: sessionStorage.getItem("sort") || "new",
+        page: Number(sessionStorage.getItem("page")) || 1,
+      };
+
       handleEditEmployeeClose();
       toast("User Edited Successully", {
         autoClose: 2000,
@@ -97,13 +102,11 @@ const EditEmployee = (props: EditEmployeeComponentProps) => {
       });
       dispatch(resetEditEmployee())
       dispatch(getEmployeeTableData(employeeData))
-    })
-      .catch((error) => {
-        // console.log("checking now", error.message)
-        toast(error.message, { autoClose: 2000, type: "error" });
-        dispatch(resetEditEmployee())
-      });
-  };
+    } else if (employeeEditDataIsError) {
+      toast(employeeEditDataError, { autoClose: 2000, type: "error" });
+      dispatch(resetEditEmployee())
+    }
+  }, [employeeEditDataIsSuccess, employeeEditDataIsError])
 
   useEffect(() => {
     if (
@@ -280,7 +283,7 @@ const EditEmployee = (props: EditEmployeeComponentProps) => {
                 type="submit"
                 fullWidth
               >
-                {isLoading ? (
+                {employeeEditDataLoading ? (
                   <CircularProgress style={{ color: "#fff" }} />
                 ) : (
                   "Submit"

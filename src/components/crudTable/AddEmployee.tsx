@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Slide from "@mui/material/Slide";
@@ -34,7 +34,7 @@ const AddEmployee = (props: AddEmployeeComponentProps) => {
   const { addEmployeeOpen, setAddEmployeeOpen, setPage } = props;
   const dispatch = useAppDispatch()
 
-  const { employeeAddDataLoading } = useAppSelector((state) => state.crud);
+  const { employeeAddDataLoading, employeeAddedDataIsError, employeeAddedDataError, employeeAddedDataIsSuccess } = useAppSelector((state) => state.crud);
 
   const [inputdata, setInputData] = useState({
     fname: "",
@@ -75,31 +75,32 @@ const AddEmployee = (props: AddEmployeeComponentProps) => {
 
   const submitEmployeeData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     // console.log("inputData", inputdata)
+    dispatch(addEmployeeTableData(inputdata))
+  };
 
-    const employeeData = {
-      search: sessionStorage.getItem("search") || "",
-      gender: sessionStorage.getItem("gender") || "all",
-      status: sessionStorage.getItem("status") || "all",
-      sort: sessionStorage.getItem("sort") || "new",
-      page: 1,
-    };
+  useEffect(() => {
+    if (employeeAddedDataIsSuccess) {
 
-    dispatch(addEmployeeTableData(inputdata)).then(() => {
+      const employeeData = {
+        search: sessionStorage.getItem("search") || "",
+        gender: sessionStorage.getItem("gender") || "all",
+        status: sessionStorage.getItem("status") || "all",
+        sort: sessionStorage.getItem("sort") || "new",
+        page: 1,
+      };
+
       handleAddEmployeeClose();
       setPage(1);
       sessionStorage.setItem("page", "1");
       toast("User Added Successully", { autoClose: 2000, type: "success" });
       dispatch(resetAddEmployee())
       dispatch(getEmployeeTableData(employeeData));
-    })
-      .catch((error) => {
-        // console.log("checking now", error.message)
-        toast(error.message, { autoClose: 2000, type: "error" });
-        dispatch(resetAddEmployee())
-      });
-  };
+    } else if (employeeAddedDataIsError) {
+      toast(employeeAddedDataError, { autoClose: 2000, type: "error" });
+      dispatch(resetAddEmployee())
+    }
+  }, [employeeAddedDataIsSuccess, employeeAddedDataIsError])
 
   return (
     <div>

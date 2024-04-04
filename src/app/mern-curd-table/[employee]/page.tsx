@@ -23,7 +23,9 @@ const EmployeesProfile = ({ params }: GetSingleEmployeeParmsType) => {
 
 
   useEffect(() => {
-    dispatch(getEmployeeProfileData({ id }))
+    if (id) {
+      dispatch(getEmployeeProfileData({ id }))
+    }
   }, [id]);
 
   return (

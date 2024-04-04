@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, { useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Slide from "@mui/material/Slide";
@@ -32,26 +32,31 @@ const DeleteEmployee = (props: DeleteEmployeeComponentProps) => {
 
   const dispatch = useAppDispatch()
 
-  const { employeeDeleteDataLoading } = useAppSelector((state) => state.crud)
+  const { employeeDeleteDataLoading, employeeDeleteDataIsSuccess, employeeDeleteDataIsError, employeeDeleteDataError } = useAppSelector((state) => state.crud)
 
   const handleDeleteEmployeeClose = () => {
     setDeleteEmployeeOpen(false);
   };
 
   const handleUserDelete = () => {
-    const employeeData = {
-      search: sessionStorage.getItem("search") || "",
-      gender: sessionStorage.getItem("gender") || "all",
-      status: sessionStorage.getItem("status") || "all",
-      sort: sessionStorage.getItem("sort") || "new",
-      page,
-    };
 
     const payload = {
       tableRowId,
     };
 
-    dispatch(deleteEmployeeTableData(payload)).then(() => {
+    dispatch(deleteEmployeeTableData(payload))
+  };
+
+  useEffect(() => {
+    if (employeeDeleteDataIsSuccess) {
+      const employeeData = {
+        search: sessionStorage.getItem("search") || "",
+        gender: sessionStorage.getItem("gender") || "all",
+        status: sessionStorage.getItem("status") || "all",
+        sort: sessionStorage.getItem("sort") || "new",
+        page,
+      };
+
       handleDeleteEmployeeClose();
       sessionStorage.setItem("page", String(page));
       setPage(page);
@@ -61,13 +66,11 @@ const DeleteEmployee = (props: DeleteEmployeeComponentProps) => {
       });
       dispatch(resetDeleteEmployee())
       dispatch(getEmployeeTableData(employeeData))
-    })
-      .catch((error) => {
-        // console.log("checking now", error.message)
-        toast(error.message, { autoClose: 2000, type: "error" });
-        dispatch(resetDeleteEmployee())
-      });
-  };
+    } else if (employeeDeleteDataIsError) {
+      toast(employeeDeleteDataError, { autoClose: 2000, type: "error" });
+      dispatch(resetDeleteEmployee())
+    }
+  }, [employeeDeleteDataIsSuccess, employeeDeleteDataIsError])
 
   return (
     <div>
