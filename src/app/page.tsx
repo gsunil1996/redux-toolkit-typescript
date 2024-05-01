@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 const Home = () => {
   const { value } = useAppSelector((state) => state.counter)
   const dispatch = useAppDispatch()
-
+  console.log("checkvariable", process.env.checkvariable);
   return (
     <div>
       <h2>Count is: {value}</h2>
