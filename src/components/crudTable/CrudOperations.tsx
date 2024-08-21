@@ -104,17 +104,17 @@ const CrudOperations = () => {
 
   const { data, isLoading, isError, error, isSuccess } = useAppSelector((state) => state.crud)
 
-  const [search, setSearch] = useState<string>(sessionStorage.getItem("search") || "");
+  const [search, setSearch] = useState<string>(typeof window !== "undefined" && sessionStorage.getItem("search") || "");
   const [gender, setGender] = useState<string>(
-    sessionStorage.getItem("gender") || "all"
+    typeof window !== "undefined" && sessionStorage.getItem("gender") || "all"
   );
   const [status, setStatus] = useState<string>(
-    sessionStorage.getItem("status") || "all"
+    typeof window !== "undefined" && sessionStorage.getItem("status") || "all"
   );
-  const [sort, setSort] = useState<string>(sessionStorage.getItem("sort") || "new");
+  const [sort, setSort] = useState<string>(typeof window !== "undefined" && sessionStorage.getItem("sort") || "new");
 
   const [page, setPage] = useState<number>(
-    sessionStorage.getItem("page") ? Number(sessionStorage.getItem("page")) : 1
+    typeof window !== "undefined" && sessionStorage.getItem("page") ? Number(sessionStorage.getItem("page")) : 1
   );
 
   const [addEmployeeOpen, setAddEmployeeOpen] = useState<boolean>(false);
@@ -128,7 +128,7 @@ const CrudOperations = () => {
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage);
-    sessionStorage.setItem("page", newPage.toString());
+    typeof window !== "undefined" && sessionStorage.setItem("page", newPage.toString());
     getData({ search, gender, status, sort, page: newPage });
   };
 
@@ -161,9 +161,9 @@ const CrudOperations = () => {
 
   const handleSearch = (searchedVal: string) => {
     setSearch(searchedVal);
-    sessionStorage.setItem("search", searchedVal);
+    typeof window !== "undefined" && sessionStorage.setItem("search", searchedVal);
     setPage(1);
-    sessionStorage.setItem("page", "1");
+    typeof window !== "undefined" && sessionStorage.setItem("page", "1");
     if (searchedVal == "") {
       getData({ search: searchedVal, gender, status, sort, page: 1 });
     }
@@ -171,54 +171,57 @@ const CrudOperations = () => {
 
   const requestSearch = () => {
     setPage(1);
-    sessionStorage.setItem("page", "1");
+    typeof window !== "undefined" && sessionStorage.setItem("page", "1");
     getData({ search, gender, status, sort, page: 1 });
   };
 
   const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    sessionStorage.setItem("gender", event.target.value);
+    typeof window !== "undefined" && sessionStorage.setItem("gender", event.target.value);
     setGender((event.target as HTMLInputElement).value);
-    sessionStorage.setItem("page", "1");
+    typeof window !== "undefined" && sessionStorage.setItem("page", "1");
     setPage(1);
     getData({ search, gender: event.target.value, status, sort, page: 1 });
   };
 
   const handleStatusChange = (event: SelectChangeEvent) => {
-    sessionStorage.setItem("status", event.target.value);
+    typeof window !== "undefined" && sessionStorage.setItem("status", event.target.value);
     setStatus(event.target.value as string);
-    sessionStorage.setItem("page", "1");
+    typeof window !== "undefined" && sessionStorage.setItem("page", "1");
     setPage(1);
     getData({ search, gender, status: event.target.value, sort, page: 1 });
   };
 
   const handleSortChange = (event: SelectChangeEvent) => {
-    sessionStorage.setItem("sort", event.target.value);
+    typeof window !== "undefined" && sessionStorage.setItem("sort", event.target.value);
     setSort(event.target.value as string);
-    sessionStorage.setItem("page", "1");
+    typeof window !== "undefined" && sessionStorage.setItem("page", "1");
     setPage(1);
     getData({ search, gender, status, sort: event.target.value, page: 1 });
   };
 
   useEffect(() => {
 
-    if (!sessionStorage.getItem("page")) {
-      sessionStorage.setItem("page", "1");
-    }
+    if (typeof window !== "undefined") {
 
-    if (!sessionStorage.getItem("gender")) {
-      sessionStorage.setItem("gender", "all");
-    }
+      if (!sessionStorage.getItem("page")) {
+        sessionStorage.setItem("page", "1");
+      }
 
-    if (!sessionStorage.getItem("status")) {
-      sessionStorage.setItem("status", "all");
-    }
+      if (!sessionStorage.getItem("gender")) {
+        sessionStorage.setItem("gender", "all");
+      }
 
-    if (!sessionStorage.getItem("sort")) {
-      sessionStorage.setItem("sort", "new");
-    }
+      if (!sessionStorage.getItem("status")) {
+        sessionStorage.setItem("status", "all");
+      }
 
-    if (!sessionStorage.getItem("search")) {
-      sessionStorage.setItem("search", "");
+      if (!sessionStorage.getItem("sort")) {
+        sessionStorage.setItem("sort", "new");
+      }
+
+      if (!sessionStorage.getItem("search")) {
+        sessionStorage.setItem("search", "");
+      }
     }
 
     getData({

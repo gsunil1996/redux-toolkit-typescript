@@ -88,11 +88,11 @@ const EditEmployee = (props: EditEmployeeComponentProps) => {
     if (employeeEditDataIsSuccess) {
 
       const employeeData = {
-        search: sessionStorage.getItem("search") || "",
-        gender: sessionStorage.getItem("gender") || "all",
-        status: sessionStorage.getItem("status") || "all",
-        sort: sessionStorage.getItem("sort") || "new",
-        page: Number(sessionStorage.getItem("page")) || 1,
+        search: typeof window !== "undefined" && sessionStorage.getItem("search") || "",
+        gender: typeof window !== "undefined" && sessionStorage.getItem("gender") || "all",
+        status: typeof window !== "undefined" && sessionStorage.getItem("status") || "all",
+        sort: typeof window !== "undefined" && sessionStorage.getItem("sort") || "new",
+        page: typeof window !== "undefined" && Number(sessionStorage.getItem("page")) || 1,
       };
 
       handleEditEmployeeClose();

@@ -50,15 +50,15 @@ const DeleteEmployee = (props: DeleteEmployeeComponentProps) => {
   useEffect(() => {
     if (employeeDeleteDataIsSuccess) {
       const employeeData = {
-        search: sessionStorage.getItem("search") || "",
-        gender: sessionStorage.getItem("gender") || "all",
-        status: sessionStorage.getItem("status") || "all",
-        sort: sessionStorage.getItem("sort") || "new",
+        search: typeof window !== "undefined" && sessionStorage.getItem("search") || "",
+        gender: typeof window !== "undefined" && sessionStorage.getItem("gender") || "all",
+        status: typeof window !== "undefined" && sessionStorage.getItem("status") || "all",
+        sort: typeof window !== "undefined" && sessionStorage.getItem("sort") || "new",
         page,
       };
 
       handleDeleteEmployeeClose();
-      sessionStorage.setItem("page", String(page));
+      typeof window !== "undefined" && sessionStorage.setItem("page", String(page));
       setPage(page);
       toast("User Deleted Successully", {
         autoClose: 2000,

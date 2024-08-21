@@ -83,16 +83,16 @@ const AddEmployee = (props: AddEmployeeComponentProps) => {
     if (employeeAddedDataIsSuccess) {
 
       const employeeData = {
-        search: sessionStorage.getItem("search") || "",
-        gender: sessionStorage.getItem("gender") || "all",
-        status: sessionStorage.getItem("status") || "all",
-        sort: sessionStorage.getItem("sort") || "new",
+        search: typeof window !== "undefined" && sessionStorage.getItem("search") || "",
+        gender: typeof window !== "undefined" && sessionStorage.getItem("gender") || "all",
+        status: typeof window !== "undefined" && sessionStorage.getItem("status") || "all",
+        sort: typeof window !== "undefined" && sessionStorage.getItem("sort") || "new",
         page: 1,
       };
 
       handleAddEmployeeClose();
       setPage(1);
-      sessionStorage.setItem("page", "1");
+      typeof window !== "undefined" && sessionStorage.setItem("page", "1");
       toast("User Added Successully", { autoClose: 2000, type: "success" });
       dispatch(resetAddEmployee())
       dispatch(getEmployeeTableData(employeeData));
