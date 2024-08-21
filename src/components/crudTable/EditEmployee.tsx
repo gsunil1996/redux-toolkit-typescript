@@ -155,7 +155,7 @@ const EditEmployee = (props: EditEmployeeComponentProps) => {
           </div>
         ) : employeeProfileIsError ? (
           <div
-            style={{ width: "100%", marginTop: "20px", textAlign: "center" }}
+            style={{ width: "100%", marginTop: "22px", textAlign: "center" }}
           >
             <h1>{employeeProfileError}</h1>
           </div>
